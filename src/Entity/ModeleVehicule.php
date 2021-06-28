@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use App\Repository\ModeleVehiculeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ModeleVehiculeRepository::class)
@@ -21,11 +22,13 @@ class ModeleVehicule
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups ({"vehicule:read"})
      */
     private $libelle;
 
     /**
      * @ORM\ManyToOne(targetEntity=Marques::class, inversedBy="modeleVehicules")
+     * @Groups ({"vehicule:read"})
      */
     private $marque;
 
