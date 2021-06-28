@@ -2,14 +2,23 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\VehiculesRepository;
+use App\Entity\Clients;
+use App\Entity\ModeleVehicule;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\VehiculesRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=VehiculesRepository::class)
+ *  @ApiResource(
+ *  collectionOperations={
+ *          "add_vehicule"={
+ *              "route_name"="addVehicule",
+ *          },
+ *          },
+ *        
+ *     )
  */
-#[ApiResource]
 class Vehicules
 {
     /**
@@ -23,11 +32,6 @@ class Vehicules
      * @ORM\ManyToOne(targetEntity=Clients::class, inversedBy="vehicules")
      */
     private $client;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Marques::class, inversedBy="vehicules")
-     */
-    private $marque;
 
     /**
      * @ORM\ManyToOne(targetEntity=ModeleVehicule::class, inversedBy="vehicules")
@@ -72,18 +76,6 @@ class Vehicules
     public function setClient(?Clients $client): self
     {
         $this->client = $client;
-
-        return $this;
-    }
-
-    public function getMarque(): ?Marques
-    {
-        return $this->marque;
-    }
-
-    public function setMarque(?Marques $marque): self
-    {
-        $this->marque = $marque;
 
         return $this;
     }

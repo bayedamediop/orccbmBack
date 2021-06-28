@@ -29,7 +29,7 @@ class ClientController extends AbstractController
     }
     /**
      * * @Route (
-     *     name="c",
+     *     name="addClient",
      *      path="/api/admin/client",
      *      methods={"POST"},
      *     defaults={
