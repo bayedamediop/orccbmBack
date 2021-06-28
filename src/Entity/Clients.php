@@ -3,10 +3,22 @@
 namespace App\Entity;
 
 use App\Repository\ClientsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ClientsRepository::class)
+ *  @ApiResource(
+ *  collectionOperations={
+ *          "add_client"={
+ *              "route_name"="addClient",
+ *          },
+ *          },
+ *        
+ *     )
  */
 class Clients
 {
@@ -56,6 +68,22 @@ class Clients
      * @ORM\ManyToOne(targetEntity=Types::class, inversedBy="clients")
      */
     private $type;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Vehicules::class, mappedBy="client")
+     */
+    private $vehicules;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Ors::class, mappedBy="client")
+     */
+    private $ors;
+
+    public function __construct()
+    {
+        $this->vehicules = new ArrayCollection();
+        $this->ors = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -154,6 +182,66 @@ class Clients
     public function setType(?Types $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Vehicules[]
+     */
+    public function getVehicules(): Collection
+    {
+        return $this->vehicules;
+    }
+
+    public function addVehicule(Vehicules $vehicule): self
+    {
+        if (!$this->vehicules->contains($vehicule)) {
+            $this->vehicules[] = $vehicule;
+            $vehicule->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVehicule(Vehicules $vehicule): self
+    {
+        if ($this->vehicules->removeElement($vehicule)) {
+            // set the owning side to null (unless already changed)
+            if ($vehicule->getClient() === $this) {
+                $vehicule->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Ors[]
+     */
+    public function getOrs(): Collection
+    {
+        return $this->ors;
+    }
+
+    public function addOr(Ors $or): self
+    {
+        if (!$this->ors->contains($or)) {
+            $this->ors[] = $or;
+            $or->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOr(Ors $or): self
+    {
+        if ($this->ors->removeElement($or)) {
+            // set the owning side to null (unless already changed)
+            if ($or->getClient() === $this) {
+                $or->setClient(null);
+            }
+        }
 
         return $this;
     }
